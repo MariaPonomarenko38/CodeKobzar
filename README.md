@@ -20,6 +20,12 @@
    pip install -r requirements.txt
    ```
 
+3. **Run Inference**
+   ```
+   cd src
+   python inference.py
+   ```
+
 ## Saving New Requirements
 
     ```shell
