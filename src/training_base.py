@@ -4,6 +4,7 @@ import os
 import numpy as np
 import pandas as pd
 import pickle
+import json
 from data import prepare_dataset
 from peft import (
     LoraConfig,
@@ -17,13 +18,14 @@ from transformers import (
     TrainingArguments,
 )
 from trl import SFTTrainer
+from constants import TRAINING_CONFIG_PATH
 
 os.environ["WANDB_PROJECT"] = "ukrainian-finetuned-model"
 os.environ["WANDB_LOG_MODEL"] = "checkpoint"
 
 def main(args):
 
-    train_dataset = prepare_dataset(args.dataset_repo)
+    train_dataset = prepare_dataset(args['dataset_repo'])
 
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -33,14 +35,14 @@ def main(args):
     )
 
     model = AutoModelForCausalLM.from_pretrained(
-        args.pretrained_ckpt,
+        args['pretrained_ckpt'],
         quantization_config=bnb_config,
         use_cache=False,
         device_map="auto",
     )
     model.config.pretraining_tp = 1
 
-    tokenizer = AutoTokenizer.from_pretrained(args.pretrained_ckpt)
+    tokenizer = AutoTokenizer.from_pretrained(args['pretrained_ckpt'])
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
 
@@ -55,8 +57,8 @@ def main(args):
 
     peft_config = LoraConfig(
         lora_alpha=16,
-        lora_dropout=args.dropout,
-        r=args.lora_r,
+        lora_dropout=args['dropout'],
+        r=args['lora_r'],
         bias="none",
         task_type="CAUSAL_LM",
         target_modules=full_modules 
@@ -66,9 +68,9 @@ def main(args):
     model = get_peft_model(model, peft_config)
 
     training_args = TrainingArguments(
-        output_dir=args.results_dir,
-        logging_dir=f"{args.results_dir}/logs",
-        num_train_epochs=args.epochs,
+        output_dir=args['results_dir'],
+        logging_dir=f"{args['results_dir']}/logs",
+        num_train_epochs=args['epochs'],
         per_device_train_batch_size=4,
         gradient_accumulation_steps=2,
         gradient_checkpointing=True,
@@ -82,7 +84,6 @@ def main(args):
         lr_scheduler_type="constant",
         report_to="wandb",  
         logging_steps=1, 
-        # disable_tqdm=True # disable tqdm since with packing values are in correct
     )
 
     max_seq_length = 512  
@@ -96,22 +97,22 @@ def main(args):
         packing=True,
         args=training_args,
         dataset_text_field="instructions",
-        neftune_noise_alpha=args.neftune
+        neftune_noise_alpha=args['neftune']
     )
 
     trainer_stats = trainer.train()
     train_loss = trainer_stats.training_loss
     print(f"Training loss:{train_loss}")
 
-    peft_model_id = f"{args.results_dir}/assets"
+    peft_model_id = f"{args['results_dir']}/assets"
     trainer.model.save_pretrained(peft_model_id)
     tokenizer.save_pretrained(peft_model_id)
 
-    with open(f"{args.results_dir}/results.pkl", "wb") as handle:
+    with open(f"{args['results_dir']}/results.pkl", "wb") as handle:
         run_result = [
-            args.epochs,
-            args.lora_r,
-            args.dropout,
+            args['epochs'],
+            args['lora_r'],
+            args['dropout'],
             train_loss,
         ]
         pickle.dump(run_result, handle)
@@ -119,16 +120,8 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset_repo", default="")
-    parser.add_argument("--results_dir", default="./models")
-    parser.add_argument("--pretrained_ckpt", default="HuggingFaceH4/zephyr-7b-beta")
-    parser.add_argument("--lora_r", default=8, type=int)
-    parser.add_argument("--epochs", default=5, type=int)
-    parser.add_argument("--dropout", default=0.1, type=float)
-    parser.add_argument("--train_sample_fraction", default=0.99, type=float)
-    parser.add_argument("--neftune", default=None, type=float)
-    parser.add_argument("--full_tune", default=False, type=bool)
-
-    args = parser.parse_args()
+ 
+    with open(TRAINING_CONFIG_PATH, 'r') as config_file:
+        args = json.load(config_file)
+    
     main(args)

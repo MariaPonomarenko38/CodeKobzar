@@ -1,0 +1,11 @@
+{
+    "dataset_repo": "",
+    "results_dir": "./models",
+    "pretrained_ckpt": "",
+    "lora_r": 8,
+    "epochs": 5,
+    "dropout": 0.1,
+    "train_sample_fraction": 0.99,
+    "neftune": null,
+    "full_tune": false
+}
