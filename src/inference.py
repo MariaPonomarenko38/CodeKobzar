@@ -14,10 +14,10 @@ Options:
 
 import json
 import argparse
+import requests
 import textwrap
 import os
 from dataclasses import dataclass
-
 
 @dataclass
 class Choice:
@@ -42,6 +42,8 @@ class Task:
             source=data["source"],
         )
 
+
+VLLM_ENDPOINT = 'http://127.0.0.1:8000/generate'
 
 def predict(dataset: list[Task], *, verbose=True) -> list[str]:
     """Make a prediction on a dataset."""
@@ -112,10 +114,30 @@ def format_extra_instructions(task: Task) -> str:
 
 
 def complete(prompt: str) -> str:
-    """Make a completion on the given prompt."""
+    """Make a completion on the given prompt. The request is sent to Outlines vLLM server."""
 
-    # Normally, you'd generate it from a language model
-    return "А"
+    data = {
+        "prompt": prompt,
+        "schema": {
+            "title": "Choice",
+            "type": "object",
+            "properties": {
+                "choice": {"$ref": "#/definitions/Choice"}
+            },
+            "required": ["choice"],
+            "definitions": {
+                "Choice": {
+                    "title": "Choice",
+                    "description": "A letter.",
+                    "enum": ["А", "Б", "В", "Г"],
+                    "type": "string"
+                }
+            }
+        }
+    }
+
+    response = requests.post(VLLM_ENDPOINT, json=data)
+    return response.text
 
 
 def parse_completion(completion: str) -> str:
