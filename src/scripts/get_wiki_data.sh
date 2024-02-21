@@ -1,0 +1,1 @@
+wget -O ./data/ukwiki_dump.xml.bz2 https://dumps.wikimedia.org/ukwiki/latest/ukwiki-latest-pages-articles-multistream.xml.bz2
