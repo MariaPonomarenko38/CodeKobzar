@@ -6,6 +6,7 @@ import pandas as pd
 import pickle
 import json
 from data import prepare_dataset
+from datasets import concatenate_datasets
 from peft import (
     LoraConfig,
     prepare_model_for_kbit_training,
@@ -25,7 +26,10 @@ os.environ["WANDB_LOG_MODEL"] = "checkpoint"
 
 def main(args):
 
-    train_dataset = prepare_dataset(args['dataset_repo'])
+    train_dataset_pq = prepare_dataset(args['dataset_repo'], "prompt", "question")
+    train_dataset_qr = prepare_dataset(args['dataset_repo'], "question", "response")
+    train_dataset_exam = prepare_dataset(args['exam_questions_repo'], "question", "answers", exam_answers_format=True)
+    train_dataset = concatenate_datasets([train_dataset_pq, train_dataset_qr, train_dataset_exam])
 
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -56,7 +60,7 @@ def main(args):
                     "lm_head"]
 
     peft_config = LoraConfig(
-        lora_alpha=16,
+        lora_alpha=128,
         lora_dropout=args['dropout'],
         r=args['lora_r'],
         bias="none",
@@ -71,7 +75,7 @@ def main(args):
         output_dir=args['results_dir'],
         logging_dir=f"{args['results_dir']}/logs",
         num_train_epochs=args['epochs'],
-        per_device_train_batch_size=4,
+        per_device_train_batch_size=25,
         gradient_accumulation_steps=2,
         gradient_checkpointing=True,
         optim="paged_adamw_32bit",
@@ -81,12 +85,11 @@ def main(args):
         tf32=True,
         max_grad_norm=0.3,
         warmup_ratio=0.03,
-        lr_scheduler_type="constant",
-        report_to="wandb",  
-        logging_steps=1, 
+        lr_scheduler_type="cosine",
+        report_to="wandb"
     )
 
-    max_seq_length = 512  
+    max_seq_length = 2048 
 
     trainer = SFTTrainer(
         model=model,
