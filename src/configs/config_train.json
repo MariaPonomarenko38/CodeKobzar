@@ -1,10 +1,10 @@
 {
     "dataset_repo": "byebyebye/ukr-wiki-qa-v1",
     "exam_questions_repo": "osyvokon/zno",
-    "results_dir": "./models",
+    "results_dir": "./models/v2",
     "pretrained_ckpt": "lmsys/vicuna-7b-v1.5",
     "lora_r": 64,
-    "epochs": 5,
+    "epochs": 1,
     "dropout": 0.1,
     "train_sample_fraction": 0.99,
     "neftune": null,

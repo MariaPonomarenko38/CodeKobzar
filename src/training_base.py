@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import pickle
 import json
-from data import prepare_dataset
+from data import prepare_dataset, prepare_dataset_exam
 from datasets import concatenate_datasets
 from peft import (
     LoraConfig,
@@ -28,9 +28,9 @@ def main(args):
 
     train_dataset_pq = prepare_dataset(args['dataset_repo'], "prompt", "question")
     train_dataset_qr = prepare_dataset(args['dataset_repo'], "question", "response")
-    train_dataset_exam = prepare_dataset(args['exam_questions_repo'], "question", "answers", exam_answers_format=True)
+    train_dataset_exam = prepare_dataset_exam(args['exam_questions_repo'], "question", "answers", "correct_answers")
     train_dataset = concatenate_datasets([train_dataset_pq, train_dataset_qr, train_dataset_exam])
-
+    train_dataset = train_dataset.shuffle(seed=42)
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_use_double_quant=True,
@@ -120,8 +120,7 @@ def main(args):
         ]
         pickle.dump(run_result, handle)
     print("Experiment over")
-
-
+  
 if __name__ == "__main__":
  
     with open(TRAINING_CONFIG_PATH, 'r') as config_file:
