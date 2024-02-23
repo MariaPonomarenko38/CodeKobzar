@@ -164,3 +164,4 @@ cython_debug/
 /src/models/
 /src/wandb/
 /src/datasets/
+/src/artifacts/

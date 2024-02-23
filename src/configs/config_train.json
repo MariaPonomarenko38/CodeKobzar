@@ -1,8 +1,8 @@
 {
     "dataset_repo": "byebyebye/ukr-wiki-qa-v1",
     "exam_questions_repo": "osyvokon/zno",
-    "results_dir": "./models/v2",
-    "pretrained_ckpt": "lmsys/vicuna-7b-v1.5",
+    "results_dir": "./models/13B_v2",
+    "pretrained_ckpt": "ponoma16/KodKobzarLLM-13B-merged",
     "lora_r": 64,
     "epochs": 1,
     "dropout": 0.1,
