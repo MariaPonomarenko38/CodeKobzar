@@ -161,3 +161,6 @@ cython_debug/
 
 /data/*
 !/data/llm-for-ua-sample.jsonl
+/src/models/
+/src/wandb/
+/src/datasets/
