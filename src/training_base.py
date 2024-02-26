@@ -26,10 +26,21 @@ os.environ["WANDB_LOG_MODEL"] = "checkpoint"
 
 def main(args):
 
-    train_dataset_pq = prepare_dataset(args['dataset_repo'], "prompt", "question")
-    train_dataset_qr = prepare_dataset(args['dataset_repo'], "question", "response")
+    train_dataset_pq = prepare_dataset(args['dataset_repo'], "prompt", "question").train_test_split(test_size=0.2)
+    train_dataset_qr = prepare_dataset(args['dataset_repo'], "question", "response").train_test_split(test_size=0.2)
+
+    smaller_train_dataset_pq = train_dataset_pq['test']
+    smaller_train_dataset_qr = train_dataset_qr['test']
+
+    train_dataset_pq_v2 = prepare_dataset(args['dataset_repo_v2'], "prompt", "question")
+    train_dataset_qr_v2 = prepare_dataset(args['dataset_repo_v2'], "question", "response")
+
     train_dataset_exam = prepare_dataset_exam(args['exam_questions_repo'], "question", "answers", "correct_answers")
-    train_dataset = concatenate_datasets([train_dataset_pq, train_dataset_qr, train_dataset_exam])
+    
+    train_dataset = concatenate_datasets([smaller_train_dataset_pq, smaller_train_dataset_qr, 
+                                            train_dataset_pq_v2, train_dataset_qr_v2
+                                            train_dataset_exam])
+                                            
     train_dataset = train_dataset.shuffle(seed=42)
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,

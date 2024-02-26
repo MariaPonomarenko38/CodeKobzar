@@ -39,4 +39,6 @@ def upload_model_to_huggingface(model_id, model_directory):
 
 
 if __name__ == '__main__':
-   upload_model_to_huggingface('ponoma16/kodkobzar13b-2x', '/root/kobkobzar/KodKobzar/src/models/13B_v2/assets')
+   
+   merge_model('ponoma16/kodkobzar13b-2x', '/root/kobkobzar/KodKobzar/src/models/kodkobzar13b-2x-merged', 'ponoma16/kodkobzar13b-2x-merged')
+   #upload_model_to_huggingface('ponoma16/kodkobzar13b-2x', '/root/kobkobzar/KodKobzar/src/models/13B_v2/assets')
