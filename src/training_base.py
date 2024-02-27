@@ -37,7 +37,7 @@ def main(args):
 
     train_dataset_exam = prepare_dataset_exam(args['exam_questions_repo'], "question", "answers", "correct_answers")
     
-    train_dataset = concatenate_datasets([smaller_train_dataset_pq, smaller_train_dataset_qr, 
+    train_dataset = concatenate_datasets([#smaller_train_dataset_pq, #smaller_train_dataset_qr, 
                                             train_dataset_pq_v2, train_dataset_qr_v2,
                                             train_dataset_exam])
                                             
