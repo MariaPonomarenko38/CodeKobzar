@@ -1,6 +1,6 @@
-# KodKobzar
+# CodeKobzar
 
-<a href="https://huggingface.co/ponoma16/KodKobzar13B">KodKobzar13B</a> is a generative model that was trained on Ukrainian Wikipedia data and Ukrainian language rules. It has knowledge of Ukrainian history, language, literature and culture.
+<a href="https://huggingface.co/ponoma16/KodKobzar13B">CodeKobzar13B</a> is a generative model that was trained on Ukrainian Wikipedia data and Ukrainian language rules. It has knowledge of Ukrainian history, language, literature and culture.
 
 ## Getting Started
 
