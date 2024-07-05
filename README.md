@@ -10,15 +10,15 @@
    wget https://repo.anaconda.com/miniconda/Miniconda3-py38_4.11.0-Linux-x86_64.sh
    bash Miniconda3-py38_4.11.0-Linux-x86_64.sh
    source ~/.bashrc
-   conda create --name kodkobzar python=3.11
-   conda activate kodkobzar
+   conda create --name codekobzar python=3.11
+   conda activate codekobzar
    ```
 
 2. **Install relevant packages**
 
    ```shell
-   git clone https://github.com/MariaPonomarenko38/KodKobzar
-   cd Kodobzar
+   git clone https://github.com/MariaPonomarenko38/CodeKobzar
+   cd CodeKobzar
    pip install -r requirements.txt
    ```
 
