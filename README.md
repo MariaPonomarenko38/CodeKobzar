@@ -2,6 +2,8 @@
 
 <a href="https://huggingface.co/ponoma16/KodKobzar13B">CodeKobzar13B</a> is a generative model that was trained on Ukrainian Wikipedia data and Ukrainian language rules. It has knowledge of Ukrainian history, language, literature and culture.
 
+🥉 TOP-3 solution at <a href="http://aclanthology.org/2024.unlp-1.9.pdf"> UNLP 2024 Shared Task </a>
+
 ## Getting Started
 
 1. **Setup conda environment**
