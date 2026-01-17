@@ -1,0 +1,7 @@
+https://dumps.wikimedia.org/ukwiki/latest/ukwiki-latest-abstract.xml.gz
+https://dumps.wikimedia.org/ukwiki/latest/ukwiki-latest-abstract1.xml.gz
+https://dumps.wikimedia.org/ukwiki/latest/ukwiki-latest-abstract2.xml.gz
+https://dumps.wikimedia.org/ukwiki/latest/ukwiki-latest-abstract3.xml.gz
+https://dumps.wikimedia.org/ukwiki/latest/ukwiki-latest-abstract4.xml.gz
+https://dumps.wikimedia.org/ukwiki/latest/ukwiki-latest-abstract5.xml.gz
+https://dumps.wikimedia.org/ukwiki/latest/ukwiki-latest-abstract6.xml.gz
